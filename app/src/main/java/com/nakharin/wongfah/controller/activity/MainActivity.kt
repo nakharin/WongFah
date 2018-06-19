@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.controller.fragment.CategoryFragment
+import com.nakharin.wongfah.controller.fragment.MenuScreenFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.contentContainer,
-                            CategoryFragment.newInstance(),
+                            MenuScreenFragment.newInstance(),
                             "CategoryFragment")
                     .commit()
         }

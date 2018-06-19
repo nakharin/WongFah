@@ -2,4 +2,5 @@
     <string name="app_name">WongFah</string>
 
     <string name="str_categories">Categories</string>
+    <string name="txt_select">Tap on menu card to add to order list</string>
 </resources>

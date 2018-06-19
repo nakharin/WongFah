@@ -14,5 +14,5 @@ class JsonMenu {
     var imageUrl: String = ""
 
     @SerializedName("price")
-    var price: Int = -1
+    var price: Int = 0
 }

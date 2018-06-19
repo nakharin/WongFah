@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_padding_large"
+    tools:context=".controller.fragment.MenuScreenFragment">
+
+    <TextView
+        android:id="@+id/txtTab"
+        style="@style/TextView.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/margin_padding"
+        android:text="@string/txt_select" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerMenuScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtTab"
+        android:layout_above="@+id/btnComplete"
+        android:orientation="horizontal"
+        tools:itemCount="3"
+        tools:listitem="@layout/view_recycler_menu_screen_item_row"/>
+
+    <Button
+        android:id="@+id/btnComplete"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="COMPLETE ORER"/>
+
+</RelativeLayout>
