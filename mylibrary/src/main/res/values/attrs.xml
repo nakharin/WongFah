@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomToolbar">
+        <attr name="item_count" format="integer" />
+        <attr name="show_back_icon" format="boolean" />
+    </declare-styleable>
+
+</resources>
