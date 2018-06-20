@@ -206,7 +206,7 @@
                     android:id="@+id/btnCheckOut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CHECKOUT" />
+                    android:text="@string/str_checkout" />
 
             </LinearLayout>
 

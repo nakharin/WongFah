@@ -9,4 +9,6 @@
     <string name="str_service_charge_10">Service charge 10%</string>
     <string name="str_total">Total</string>
     <string name="str_baht">฿</string>
+    <string name="str_complete_order">COMPLETE ORDER</string>
+    <string name="str_checkout">CHECKOUT</string>
 </resources>
