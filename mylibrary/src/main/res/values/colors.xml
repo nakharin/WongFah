@@ -3,6 +3,7 @@
 
     <color name="colorText">#656565</color>
     <color name="colorGray">#757575</color>
+    <color name="colorRed">#ff6060</color>
     <color name="colorBlue">#0066BB</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreen">#4CAF50</color>

@@ -54,12 +54,17 @@ class CustomToolbar @JvmOverloads constructor(
 
     private fun checkLess100(itemCount: Int) {
         when (itemCount) {
+            0 -> {
+                fmlBadgeCount.visibility = View.GONE
+                txtBadgeCount.text = ""
+            }
             in 1..99 -> {
                 fmlBadgeCount.visibility = View.VISIBLE
                 txtBadgeCount.text = itemCount.toString()
             }
             else -> {
-                fmlBadgeCount.visibility = View.GONE
+                fmlBadgeCount.visibility = View.VISIBLE
+                txtBadgeCount.text = "99+"
             }
         }
     }

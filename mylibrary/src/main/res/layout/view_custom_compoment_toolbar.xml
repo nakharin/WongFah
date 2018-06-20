@@ -76,7 +76,7 @@
                 android:layout_width="@dimen/badges_size"
                 android:layout_height="@dimen/badges_size"
                 android:layout_gravity="center"
-                tools:text="99" />
+                tools:text="99+" />
 
         </FrameLayout>
 

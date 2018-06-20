@@ -156,6 +156,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Subscribe
+    fun onReciveDeletedPosition(eventSendDeletePosition: EventSendDeletePosition) {
+        menuList.removeAt(eventSendDeletePosition.position)
+        myToolbar.setItemCount(menuList.count())
+    }
+
+    @Subscribe
     fun onReciveSeletedMenu(eventSendSelectMenu: EventSendSelectMenu) {
         menuList.add(eventSendSelectMenu.menu)
         myToolbar.setItemCount(menuList.count())

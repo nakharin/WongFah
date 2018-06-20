@@ -15,4 +15,5 @@
     <string name="str_we_have_received_your_orders">We have received your orders.</string>
     <string name="str_thank_you_and_please_come_again">Thank you and please come again. :)</string>
     <string name="str_please_select_foods">Please select a food item.</string>
+    <string name="str_delete">Delete</string>
 </resources>

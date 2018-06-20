@@ -171,6 +171,7 @@
                         android:layout_gravity="start|center_vertical"
                         android:text="@string/str_total"
                         android:textSize="18sp"
+                        android:textColor="@color/colorText"
                         android:textStyle="bold" />
 
                     <LinearLayout

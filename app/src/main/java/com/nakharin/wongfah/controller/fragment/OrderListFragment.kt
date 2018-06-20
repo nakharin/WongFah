@@ -14,6 +14,7 @@ import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.OrderAdapter
 import com.nakharin.wongfah.event.EventSendCheckOut
 import com.nakharin.wongfah.event.EventSendClosed
+import com.nakharin.wongfah.event.EventSendDeletePosition
 import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
 import com.nakharin.wongfah.utility.Constants
@@ -24,7 +25,7 @@ import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_order_list.*
 import org.parceler.Parcels
 
-class OrderListFragment: Fragment() {
+class OrderListFragment : Fragment() {
 
     companion object {
         fun newInstance(): OrderListFragment {
@@ -89,6 +90,8 @@ class OrderListFragment: Fragment() {
 
         orderAdapter = OrderAdapter(menuList)
         recyclerOrder.adapter = orderAdapter
+
+        orderAdapter.setOnRemoveListener(onRemoveListener)
     }
 
     private fun setUpView() {
@@ -99,10 +102,7 @@ class OrderListFragment: Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         if (menuList.isNotEmpty()) {
-            runAsync {
-                calculate()
-            }
-
+            calculate()
             recyclerOrder.adapter.notifyDataSetChanged()
         }
 
@@ -110,10 +110,10 @@ class OrderListFragment: Fragment() {
     }
 
     private fun calculate() {
-        var netCost = 0.0
-        var vatCost = 0.0
-        var serviceChargeCost = 0.0
-        var totalCost = 0.0
+        var netCost = 0.00
+        var vatCost = 0.00
+        var serviceChargeCost = 0.00
+        var totalCost = 0.00
         menuList.forEach {
             netCost += it.price
         }
@@ -122,12 +122,10 @@ class OrderListFragment: Fragment() {
         serviceChargeCost = (netCost * 10) / 100
         totalCost = netCost + vatCost + serviceChargeCost
 
-        runOnUiThread {
-            txtNet.text = "%.2f".format(netCost)
-            txtVat.text = "%.2f".format(vatCost)
-            txtServiceCharge.text = "%.2f".format(serviceChargeCost)
-            txtTotal.text = "%.2f".format(totalCost)
-        }
+        txtNet.text = "%.2f".format(netCost)
+        txtVat.text = "%.2f".format(vatCost)
+        txtServiceCharge.text = "%.2f".format(serviceChargeCost)
+        txtTotal.text = "%.2f".format(totalCost)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -155,6 +153,23 @@ class OrderListFragment: Fragment() {
             }, 1500)
         } else {
             longToast(getString(R.string.str_please_select_foods))
+        }
+    }
+
+    private val onRemoveListener: OrderAdapter.OnRemoveListener = object : OrderAdapter.OnRemoveListener {
+        override fun onRemoved(position: Int) {
+            menuList.removeAt(position)
+            recyclerOrder.adapter.notifyDataSetChanged()
+
+            val eventSendDeletePosition = EventSendDeletePosition()
+            eventSendDeletePosition.position = position
+            BusProvider.getInstance().post(eventSendDeletePosition)
+
+            calculate()
+
+            if (menuList.isEmpty()) {
+                btnCheckOut.visibility = View.GONE
+            }
         }
     }
 }
