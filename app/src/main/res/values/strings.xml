@@ -3,4 +3,10 @@
 
     <string name="str_categories">Categories</string>
     <string name="txt_select">Tap on menu card to add to order list</string>
+    <string name="str_your_orders">Your orders</string>
+    <string name="str_sub_total">Sub-total</string>
+    <string name="str_vat_7">Vat 7%</string>
+    <string name="str_service_charge_10">Service charge 10%</string>
+    <string name="str_total">Total</string>
+    <string name="str_baht">฿</string>
 </resources>

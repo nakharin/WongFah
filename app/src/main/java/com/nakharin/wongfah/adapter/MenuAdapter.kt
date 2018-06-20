@@ -12,7 +12,7 @@ import com.nakharin.wongfah.R
 import com.nakharin.wongfah.network.model.JsonMenu
 import java.util.*
 
-class MenuScreenAdapter(private val menuList: ArrayList<JsonMenu>) : RecyclerView.Adapter<MenuScreenAdapter.ViewHolder>() {
+class MenuAdapter(private val menuList: ArrayList<JsonMenu>) : RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
     private lateinit var mContext: Context
 
