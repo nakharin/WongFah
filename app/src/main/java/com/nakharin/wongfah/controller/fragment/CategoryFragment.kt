@@ -59,16 +59,6 @@ class CategoryFragment : Fragment() {
         return rootView
     }
 
-    override fun onResume() {
-        super.onResume()
-        BusProvider.getInstance().register(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        BusProvider.getInstance().unregister(this)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()

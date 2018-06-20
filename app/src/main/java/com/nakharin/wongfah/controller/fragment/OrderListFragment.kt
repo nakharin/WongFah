@@ -1,6 +1,7 @@
 package com.nakharin.wongfah.controller.fragment
 
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -11,8 +12,15 @@ import android.view.ViewGroup
 import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.OrderAdapter
+import com.nakharin.wongfah.event.EventSendCheckOut
+import com.nakharin.wongfah.event.EventSendClosed
+import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
-import io.reactivex.disposables.CompositeDisposable
+import com.nakharin.wongfah.utility.Constants
+import com.pawegio.kandroid.longToast
+import com.pawegio.kandroid.runAsync
+import com.pawegio.kandroid.runOnUiThread
+import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_order_list.*
 import org.parceler.Parcels
 
@@ -22,7 +30,7 @@ class OrderListFragment: Fragment() {
         fun newInstance(wrapped: Parcelable): OrderListFragment {
             val fragment = OrderListFragment()
             val args = Bundle()
-            args.putParcelable("SelectedMenuList", wrapped)
+            args.putParcelable(Constants.SELECTED_MENU_LIST, wrapped)
             fragment.arguments = args
             return fragment
         }
@@ -36,14 +44,12 @@ class OrderListFragment: Fragment() {
 
     private lateinit var dialog: DialogLoadingFragment
 
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init(savedInstanceState)
 
         arguments?.let {
-            val menus = Parcels.unwrap<ArrayList<JsonMenu>>(it.getParcelable("SelectedMenuList"))
+            val menus = Parcels.unwrap<ArrayList<JsonMenu>>(it.getParcelable(Constants.SELECTED_MENU_LIST))
             menuList.addAll(menus)
         }
 
@@ -56,11 +62,6 @@ class OrderListFragment: Fragment() {
         initInstances(rootView, savedInstanceState)
         setUpView()
         return rootView
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
     }
 
     private fun init(savedInstanceState: Bundle?) {
@@ -87,11 +88,16 @@ class OrderListFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recyclerOrder.adapter.notifyDataSetChanged()
 
         if (menuList.isNotEmpty()) {
-            calculate()
+            runAsync {
+                calculate()
+            }
+
+            recyclerOrder.adapter.notifyDataSetChanged()
         }
+
+        btnCheckOut.setOnClickListener(onClickListener)
     }
 
     private fun calculate() {
@@ -102,24 +108,44 @@ class OrderListFragment: Fragment() {
         menuList.forEach {
             netCost += it.price
         }
-        txtNet.text = "%.2f".format(netCost)
 
         vatCost = (netCost * 7) / 100
-        txtVat.text = "%.2f".format(vatCost)
-
         serviceChargeCost = (netCost * 10) / 100
-        txtServiceCharge.text = "%.2f".format(serviceChargeCost)
-
         totalCost = netCost + vatCost + serviceChargeCost
-        txtTotal.text = "%.2f".format(totalCost)
+
+        runOnUiThread {
+            txtNet.text = "%.2f".format(netCost)
+            txtVat.text = "%.2f".format(vatCost)
+            txtServiceCharge.text = "%.2f".format(serviceChargeCost)
+            txtTotal.text = "%.2f".format(totalCost)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save Instance (Fragment level's variables) State here
+        outState.putParcelable(Constants.SELECTED_MENU_LIST, Parcels.wrap(menuList))
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle) {
         // Restore Instance (Fragment level's variables) State here
+    }
+
+    /********************************************************************************************
+     ************************************ Listener **********************************************
+     ********************************************************************************************/
+
+    private val onClickListener: View.OnClickListener = View.OnClickListener {
+        if (menuList.isNotEmpty()) {
+            dialog.show(fragmentManager, "dialog")
+            Handler().postDelayed({
+                dialog.dismiss()
+                val eventSendCheckOut = EventSendCheckOut()
+                eventSendCheckOut.isCheckOut = true
+                BusProvider.getInstance().post(eventSendCheckOut)
+            }, 1500)
+        } else {
+            longToast(getString(R.string.str_please_select_foods))
+        }
     }
 }

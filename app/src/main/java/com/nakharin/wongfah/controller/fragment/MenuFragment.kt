@@ -12,16 +12,15 @@ import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.MenuAdapter
 import com.nakharin.wongfah.addOnItemClickListener
-import com.nakharin.wongfah.event.EventSendPosition
+import com.nakharin.wongfah.event.EventSendCompleted
 import com.nakharin.wongfah.event.EventSendSelectMenu
 import com.nakharin.wongfah.manager.CategoryManager
 import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
 import com.nakharin.wongfah.utility.Constants
 import com.nakharin.wongfah.utility.RecyclerItemClickListener
-import com.pawegio.kandroid.toast
-import com.squareup.otto.Subscribe
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.fragment_menu.*
 
 class MenuFragment: Fragment() {
 
@@ -97,6 +96,7 @@ class MenuFragment: Fragment() {
         loadLocalMenuList()
 
         recyclerMenu.addOnItemClickListener(onItemClickListener)
+        btnComplete.setOnClickListener(onClickListener)
     }
 
     private fun loadLocalMenuList() {
@@ -125,6 +125,16 @@ class MenuFragment: Fragment() {
             val eventSendSelectMenu = EventSendSelectMenu()
             eventSendSelectMenu.menu = menuList[position]
             BusProvider.getInstance().post(eventSendSelectMenu)
+        }
+    }
+
+    private val onClickListener: View.OnClickListener = View.OnClickListener {
+        when(it) {
+            btnComplete -> {
+                val eventSendCompleted = EventSendCompleted()
+                eventSendCompleted.isCompleted = true
+                BusProvider.getInstance().post(eventSendCompleted)
+            }
         }
     }
 }

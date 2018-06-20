@@ -20,17 +20,22 @@
         android:id="@+id/recyclerMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtTab"
         android:layout_above="@+id/btnComplete"
+        android:layout_below="@+id/txtTab"
         android:orientation="horizontal"
         tools:itemCount="3"
-        tools:listitem="@layout/view_recycler_menu_screen_item_row"/>
+        tools:listitem="@layout/view_recycler_menu_screen_item_row" />
 
     <Button
         android:id="@+id/btnComplete"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/str_complete_order"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background_gray"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="@string/str_complete_order"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold" />
 
 </RelativeLayout>

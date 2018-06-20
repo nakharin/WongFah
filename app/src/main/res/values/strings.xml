@@ -11,4 +11,8 @@
     <string name="str_baht">฿</string>
     <string name="str_complete_order">COMPLETE ORDER</string>
     <string name="str_checkout">CHECKOUT</string>
+    <string name="str_close">CLOSE</string>
+    <string name="str_we_have_received_your_orders">We have received your orders.</string>
+    <string name="str_thank_you_and_please_come_again">Thank you and please come again. :)</string>
+    <string name="str_please_select_foods">Please select a food item.</string>
 </resources>

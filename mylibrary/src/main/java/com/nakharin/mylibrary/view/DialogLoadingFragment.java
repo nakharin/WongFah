@@ -37,7 +37,7 @@ public class DialogLoadingFragment extends DialogFragment {
         DialogLoadingFragment fragment = new DialogLoadingFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(KEY_CANCELABLE, cancelable);
-        bundle.putString(KEY_TITLE, "กำลังโหลด โปรดรอ...");
+        bundle.putString(KEY_TITLE, "Please waiting...");
         fragment.setCancelable(cancelable);
         fragment.setArguments(bundle);
         return fragment;

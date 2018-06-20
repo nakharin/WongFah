@@ -62,7 +62,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="249.00"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorText"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -71,7 +71,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="@string/str_baht"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorText"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -102,7 +102,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="26.53"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorText"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -111,7 +111,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="@string/str_baht"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorText"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="37.90"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorText"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -151,7 +151,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="B"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorText"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -185,7 +185,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="443.43"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorOrange"
                             android:textSize="35sp"
                             android:textStyle="bold" />
 
@@ -194,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="@string/str_baht"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorOrange"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -206,7 +206,11 @@
                     android:id="@+id/btnCheckOut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/str_checkout" />
+                    android:text="@string/str_checkout"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:background="@drawable/button_background_blue"/>
 
             </LinearLayout>
 
