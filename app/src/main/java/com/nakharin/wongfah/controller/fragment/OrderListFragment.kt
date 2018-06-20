@@ -23,6 +23,7 @@ import com.pawegio.kandroid.runAsync
 import com.pawegio.kandroid.runOnUiThread
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_order_list.*
+import org.parceler.ParcelerRuntimeException
 import org.parceler.Parcels
 
 class OrderListFragment : Fragment() {
@@ -57,9 +58,12 @@ class OrderListFragment : Fragment() {
         init(savedInstanceState)
 
         arguments?.let {
-            val menus = Parcels.unwrap<ArrayList<JsonMenu>>(it.getParcelable(Constants.SELECTED_MENU_LIST))
-            if (menus != null) {
-                menuList.addAll(menus)
+            try {
+                val menus = Parcels.unwrap<ArrayList<JsonMenu>>(it.getParcelable(Constants.SELECTED_MENU_LIST))
+                if (menus != null) {
+                    menuList.addAll(menus)
+                }
+            } catch (e: ParcelerRuntimeException) {
             }
         }
 
@@ -131,7 +135,7 @@ class OrderListFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save Instance (Fragment level's variables) State here
-        outState.putParcelable(Constants.SELECTED_MENU_LIST, Parcels.wrap(menuList))
+//        outState.putParcelable(Constants.SELECTED_MENU_LIST, Parcels.wrap(menuList))
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle) {
