@@ -159,7 +159,7 @@ class OrderListFragment : Fragment() {
     private val onRemoveListener: OrderAdapter.OnRemoveListener = object : OrderAdapter.OnRemoveListener {
         override fun onRemoved(position: Int) {
             menuList.removeAt(position)
-            recyclerOrder.adapter.notifyDataSetChanged()
+            recyclerOrder.adapter.notifyItemRemoved(position)
 
             val eventSendDeletePosition = EventSendDeletePosition()
             eventSendDeletePosition.position = position
