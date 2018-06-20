@@ -27,6 +27,13 @@ import org.parceler.Parcels
 class OrderListFragment: Fragment() {
 
     companion object {
+        fun newInstance(): OrderListFragment {
+            val fragment = OrderListFragment()
+            val args = Bundle()
+            fragment.arguments = args
+            return fragment
+        }
+
         fun newInstance(wrapped: Parcelable): OrderListFragment {
             val fragment = OrderListFragment()
             val args = Bundle()
@@ -50,7 +57,9 @@ class OrderListFragment: Fragment() {
 
         arguments?.let {
             val menus = Parcels.unwrap<ArrayList<JsonMenu>>(it.getParcelable(Constants.SELECTED_MENU_LIST))
-            menuList.addAll(menus)
+            if (menus != null) {
+                menuList.addAll(menus)
+            }
         }
 
         if (savedInstanceState != null)

@@ -88,7 +88,9 @@ class CategoryFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        loadCategoryList()
+        if (CategoryManager.getInstance().categoryList.isEmpty()) {
+            loadCategoryList()
+        }
 
         recyclerCategory.addOnItemClickListener(onItemClickListener)
     }

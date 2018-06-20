@@ -19,12 +19,21 @@ import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
 import com.nakharin.wongfah.utility.Constants
 import com.nakharin.wongfah.utility.RecyclerItemClickListener
+import com.pawegio.kandroid.toast
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 class MenuFragment: Fragment() {
 
     companion object {
+
+        fun newInstance(): MenuFragment {
+            val fragment = MenuFragment()
+            val args = Bundle()
+            fragment.arguments = args
+            return fragment
+        }
+
         fun newInstance(position: Int): MenuFragment {
             val fragment = MenuFragment()
             val args = Bundle()
@@ -39,10 +48,6 @@ class MenuFragment: Fragment() {
     private lateinit var menuAdapter: MenuAdapter
 
     private var menuList: ArrayList<JsonMenu> = arrayListOf()
-
-    private lateinit var dialog: DialogLoadingFragment
-
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private var position: Int = 0
 
@@ -61,13 +66,7 @@ class MenuFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_menu, container, false)
         initInstances(rootView, savedInstanceState)
-        setUpView()
         return rootView
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
     }
 
     private fun init(savedInstanceState: Bundle?) {
@@ -87,12 +86,9 @@ class MenuFragment: Fragment() {
         recyclerMenu.adapter = menuAdapter
     }
 
-    private fun setUpView() {
-        dialog = DialogLoadingFragment.newInstance(false)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         loadLocalMenuList()
 
         recyclerMenu.addOnItemClickListener(onItemClickListener)
