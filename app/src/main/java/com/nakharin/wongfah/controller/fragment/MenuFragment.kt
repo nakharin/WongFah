@@ -11,20 +11,25 @@ import android.view.ViewGroup
 import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.MenuAdapter
-import com.nakharin.wongfah.network.ConnectionService
+import com.nakharin.wongfah.addOnItemClickListener
+import com.nakharin.wongfah.event.EventSendPosition
+import com.nakharin.wongfah.event.EventSendSelectMenu
+import com.nakharin.wongfah.manager.CategoryManager
+import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
-import com.pawegio.kandroid.longToast
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.nakharin.wongfah.utility.Constants
+import com.nakharin.wongfah.utility.RecyclerItemClickListener
+import com.pawegio.kandroid.toast
+import com.squareup.otto.Subscribe
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_menu.*
 
 class MenuFragment: Fragment() {
 
     companion object {
-        fun newInstance(): MenuFragment {
+        fun newInstance(position: Int): MenuFragment {
             val fragment = MenuFragment()
             val args = Bundle()
+            args.putInt(Constants.POSITION, position)
             fragment.arguments = args
             return fragment
         }
@@ -40,9 +45,15 @@ class MenuFragment: Fragment() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
+    private var position: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init(savedInstanceState)
+
+        arguments?.let{
+            position = it.getInt(Constants.POSITION, 0)
+        }
 
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState)
@@ -83,40 +94,37 @@ class MenuFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        loadLocalMenuList()
 
-        dialog.show(fragmentManager, "dialog")
+        recyclerMenu.addOnItemClickListener(onItemClickListener)
+    }
 
-        val service = ConnectionService.getApiService().getCategoryList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    dialog.dismiss()
-                    if (it.success) {
-                        menuList.clear()
-                        it.data?.let {
-
-                            menuList.addAll(it[1].menus)
-                        }
-                        recyclerMenu.adapter.notifyDataSetChanged()
-                    } else {
-                        longToast(it.message)
-                    }
-                }, {
-                    dialog.dismiss()
-                    longToast(it.localizedMessage)
-                })
-
-        compositeDisposable.add(service)
+    private fun loadLocalMenuList() {
+        val menus = CategoryManager.getInstance().getMenuList(position)
+        menuList.addAll(menus)
+        recyclerMenu.adapter.notifyDataSetChanged()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save Instance (Fragment level's variables) State here
-//        outState.putBoolean("isFirstLoad", isFirstLoad)
+        outState.putInt(Constants.POSITION, position)
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle) {
         // Restore Instance (Fragment level's variables) State here
-//        isFirstLoad = savedInstanceState.getBoolean("isFirstLoad")
+        position = savedInstanceState.getInt(Constants.POSITION)
+    }
+
+    /********************************************************************************************
+     ************************************ Listener **********************************************
+     ********************************************************************************************/
+
+    private val onItemClickListener: RecyclerItemClickListener.OnClickListener = object : RecyclerItemClickListener.OnClickListener {
+        override fun onItemClick(position: Int, view: View) {
+            val eventSendSelectMenu = EventSendSelectMenu()
+            eventSendSelectMenu.menu = menuList[position]
+            BusProvider.getInstance().post(eventSendSelectMenu)
+        }
     }
 }

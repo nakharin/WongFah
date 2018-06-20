@@ -1,7 +1,9 @@
 package com.nakharin.wongfah.network.model
 
 import com.google.gson.annotations.SerializedName
+import org.parceler.Parcel
 
+@Parcel(Parcel.Serialization.BEAN)
 class JsonMenu {
 
     @SerializedName("id")

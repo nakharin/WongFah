@@ -1,6 +1,7 @@
 package com.nakharin.wongfah.controller.fragment
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,21 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
-import com.nakharin.wongfah.adapter.MenuAdapter
 import com.nakharin.wongfah.adapter.OrderAdapter
-import com.nakharin.wongfah.network.ConnectionService
 import com.nakharin.wongfah.network.model.JsonMenu
-import com.pawegio.kandroid.longToast
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_order_list.*
+import org.parceler.Parcels
 
 class OrderListFragment: Fragment() {
 
     companion object {
-        fun newInstance(): OrderListFragment {
+        fun newInstance(wrapped: Parcelable): OrderListFragment {
             val fragment = OrderListFragment()
             val args = Bundle()
+            args.putParcelable("SelectedMenuList", wrapped)
             fragment.arguments = args
             return fragment
         }
@@ -42,6 +41,11 @@ class OrderListFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init(savedInstanceState)
+
+        arguments?.let {
+            val menus = Parcels.unwrap<ArrayList<JsonMenu>>(it.getParcelable("SelectedMenuList"))
+            menuList.addAll(menus)
+        }
 
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState)
@@ -69,6 +73,7 @@ class OrderListFragment: Fragment() {
         //       in onSavedInstanceState
 
         recyclerOrder = rootView.findViewById(R.id.recyclerOrder)
+        recyclerOrder.isNestedScrollingEnabled = false
         val linearLayoutManager = LinearLayoutManager(rootView.context)
         recyclerOrder.layoutManager = linearLayoutManager
 
@@ -82,40 +87,39 @@ class OrderListFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        recyclerOrder.adapter.notifyDataSetChanged()
 
-        dialog.show(fragmentManager, "dialog")
+        if (menuList.isNotEmpty()) {
+            calculate()
+        }
+    }
 
-        val service = ConnectionService.getApiService().getCategoryList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    dialog.dismiss()
-                    if (it.success) {
-                        menuList.clear()
-                        it.data?.let {
+    private fun calculate() {
+        var netCost = 0.0
+        var vatCost = 0.0
+        var serviceChargeCost = 0.0
+        var totalCost = 0.0
+        menuList.forEach {
+            netCost += it.price
+        }
+        txtNet.text = "%.2f".format(netCost)
 
-                            menuList.addAll(it[1].menus)
-                        }
-                        recyclerOrder.adapter.notifyDataSetChanged()
-                    } else {
-                        longToast(it.message)
-                    }
-                }, {
-                    dialog.dismiss()
-                    longToast(it.localizedMessage)
-                })
+        vatCost = (netCost * 7) / 100
+        txtVat.text = "%.2f".format(vatCost)
 
-        compositeDisposable.add(service)
+        serviceChargeCost = (netCost * 10) / 100
+        txtServiceCharge.text = "%.2f".format(serviceChargeCost)
+
+        totalCost = netCost + vatCost + serviceChargeCost
+        txtTotal.text = "%.2f".format(totalCost)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save Instance (Fragment level's variables) State here
-//        outState.putBoolean("isFirstLoad", isFirstLoad)
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle) {
         // Restore Instance (Fragment level's variables) State here
-//        isFirstLoad = savedInstanceState.getBoolean("isFirstLoad")
     }
 }

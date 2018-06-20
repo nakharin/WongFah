@@ -1,6 +1,8 @@
 package com.nakharin.mylibrary.compoment
 
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,12 @@ class CustomToolbar @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private var onToolbarClickListener: OnToolbarClickListener? = null
+
+    private var itemCount: Int = 0
+
+    private var isShow: Boolean = false
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_custom_compoment_toolbar, this, true)
 
@@ -21,17 +29,27 @@ class CustomToolbar @JvmOverloads constructor(
             val a = context.theme.obtainStyledAttributes(it, R.styleable.CustomToolbar, defStyleAttr, 0)
 
             if (a.hasValue(R.styleable.CustomToolbar_item_count)) {
-                val itemCount: Int = a.getInt(R.styleable.CustomToolbar_item_count, 0)
+                itemCount = a.getInt(R.styleable.CustomToolbar_item_count, 0)
                 checkLess100(itemCount)
             }
 
             if (a.hasValue(R.styleable.CustomToolbar_show_back_icon)) {
-                val isShow = a.getBoolean(R.styleable.CustomToolbar_show_back_icon, false)
+                isShow = a.getBoolean(R.styleable.CustomToolbar_show_back_icon, false)
                 checkShowBackIcon(isShow)
             }
 
             a.recycle()
         }
+
+        val onClickListener: View.OnClickListener = OnClickListener {
+            when(it) {
+                imgBackIcon -> onToolbarClickListener?.onBackClickListener()
+                frmBadgeCount -> onToolbarClickListener?.onBadgeClickListener()
+            }
+        }
+
+        imgBackIcon.setOnClickListener(onClickListener)
+        frmBadgeCount.setOnClickListener(onClickListener)
     }
 
     private fun checkLess100(itemCount: Int) {
@@ -60,5 +78,32 @@ class CustomToolbar @JvmOverloads constructor(
 
     fun isShowBackIcon(isShow: Boolean) {
         checkShowBackIcon(isShow)
+    }
+
+    fun setOnToolbarClickListener(onToolbarClickListener: OnToolbarClickListener) {
+        this.onToolbarClickListener = onToolbarClickListener
+    }
+
+    interface OnToolbarClickListener {
+        fun onBackClickListener()
+        fun onBadgeClickListener()
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putBoolean("show", isShow)
+        bundle.putInt("itemCount", itemCount)
+        bundle.putParcelable("superState", super.onSaveInstanceState())
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        var viewState = state
+        if (viewState is Bundle) {
+            isShow = viewState.getBoolean("show", false)
+            itemCount = viewState.getInt("itemCount", 0)
+            viewState = viewState.getParcelable("superState")
+        }
+        super.onRestoreInstanceState(viewState)
     }
 }

@@ -10,8 +10,13 @@ import android.view.ViewGroup
 import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.CategoryAdapter
+import com.nakharin.wongfah.addOnItemClickListener
+import com.nakharin.wongfah.event.EventSendPosition
+import com.nakharin.wongfah.manager.CategoryManager
+import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.ConnectionService
 import com.nakharin.wongfah.network.model.JsonCategory
+import com.nakharin.wongfah.utility.RecyclerItemClickListener
 import com.pawegio.kandroid.longToast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -54,6 +59,16 @@ class CategoryFragment : Fragment() {
         return rootView
     }
 
+    override fun onResume() {
+        super.onResume()
+        BusProvider.getInstance().register(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        BusProvider.getInstance().unregister(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
@@ -83,38 +98,61 @@ class CategoryFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        dialog.show(fragmentManager, "dialog")
+        loadCategoryList()
 
-        val service = ConnectionService.getApiService().getCategoryList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    dialog.dismiss()
-                    if (it.success) {
-                        categoryList.clear()
-                         it.data?.let {
-                             categoryList.addAll(it)
-                        }
-                        recyclerCategory.adapter.notifyDataSetChanged()
-                    } else {
-                        longToast(it.message)
-                    }
-                }, {
-                    dialog.dismiss()
-                    longToast(it.localizedMessage)
-                })
-
-        compositeDisposable.add(service)
+        recyclerCategory.addOnItemClickListener(onItemClickListener)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save Instance (Fragment level's variables) State here
-//        outState.putBoolean("isFirstLoad", isFirstLoad)
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle) {
         // Restore Instance (Fragment level's variables) State here
-//        isFirstLoad = savedInstanceState.getBoolean("isFirstLoad")
+    }
+
+    private fun loadCategoryList() {
+
+        val categories = CategoryManager.getInstance().categoryList
+        if (categories.isEmpty()) {
+            dialog.show(fragmentManager, "dialog")
+
+            val service = ConnectionService.getApiService().getCategoryList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        dialog.dismiss()
+                        if (it.success) {
+                            it.data?.let {
+                                categoryList.addAll(it)
+                                CategoryManager.getInstance().categoryList = it
+                            }
+                            recyclerCategory.adapter.notifyDataSetChanged()
+                        } else {
+                            longToast(it.message)
+                        }
+                    }, {
+                        dialog.dismiss()
+                        longToast(it.localizedMessage)
+                    })
+
+            compositeDisposable.add(service)
+        } else {
+            categoryList.addAll(categories)
+            recyclerCategory.adapter.notifyDataSetChanged()
+        }
+    }
+
+    /********************************************************************************************
+     ************************************ Listener **********************************************
+     ********************************************************************************************/
+
+    private val onItemClickListener: RecyclerItemClickListener.OnClickListener = object : RecyclerItemClickListener.OnClickListener {
+        override fun onItemClick(position: Int, view: View) {
+            val eventSendPosition = EventSendPosition()
+            eventSendPosition.position = position
+            BusProvider.getInstance().post(eventSendPosition)
+        }
     }
 }
