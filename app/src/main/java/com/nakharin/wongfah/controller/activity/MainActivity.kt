@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
 
     @Subscribe
     fun onReciveSeletedMenu(eventSendSelectMenu: EventSendSelectMenu) {
-        menuList.add(eventSendSelectMenu.menu)
+        menuList.add(eventSendSelectMenu.menu!!)
         myToolbar.setItemCount(menuList.count())
     }
 
