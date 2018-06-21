@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnComplete"
         android:layout_below="@+id/txtTab"
-        android:orientation="horizontal"
         tools:itemCount="3"
         tools:listitem="@layout/view_recycler_menu_screen_item_row" />
 
