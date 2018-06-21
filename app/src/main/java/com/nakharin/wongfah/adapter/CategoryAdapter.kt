@@ -5,11 +5,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.network.model.JsonCategory
+import kotlinx.android.synthetic.main.view_recycler_category_item_row.view.*
 import java.util.*
 
 class CategoryAdapter(private val categoryList: ArrayList<JsonCategory>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
@@ -37,7 +36,7 @@ class CategoryAdapter(private val categoryList: ArrayList<JsonCategory>) : Recyc
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val imgCategory = v.findViewById<ImageView>(R.id.imgCategory)!!
-        val txtCategory = v.findViewById<TextView>(R.id.txtCategory)!!
+        val imgCategory = v.imgCategory!!
+        val txtCategory = v.txtCategory!!
     }
 }

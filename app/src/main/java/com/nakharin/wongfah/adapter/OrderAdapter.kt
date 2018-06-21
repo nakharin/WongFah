@@ -1,18 +1,14 @@
 package com.nakharin.wongfah.adapter
 
 import android.content.Context
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.network.model.JsonMenu
-import com.pawegio.kandroid.toast
+import kotlinx.android.synthetic.main.view_recycler_order_item_row.view.*
 import java.util.*
 
 class OrderAdapter(private val orderList: ArrayList<JsonMenu>) : RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
@@ -64,13 +60,13 @@ class OrderAdapter(private val orderList: ArrayList<JsonMenu>) : RecyclerView.Ad
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val linOrder = v.findViewById<LinearLayout>(R.id.linOrder)!!
-        val imgOrder = v.findViewById<ImageView>(R.id.imgOrder)!!
-        val txtMenu = v.findViewById<TextView>(R.id.txtMenu)!!
-        val txtPrice = v.findViewById<TextView>(R.id.txtPrice)!!
-        val txtBath = v.findViewById<TextView>(R.id.txtBath)!!
-        val imgMore = v.findViewById<ImageView>(R.id.imgMore)!!
-        val crvDelete = v.findViewById<CardView>(R.id.crvDelete)!!
+        val linOrder = v.linOrder!!
+        val imgOrder = v.imgOrder!!
+        val txtMenu = v.txtMenu!!
+        val txtPrice = v.txtPrice!!
+        val txtBath = v.txtBath!!
+        val imgMore = v.imgMore!!
+        val crvDelete = v.crvDelete!!
     }
 
     interface OnRemoveListener {
