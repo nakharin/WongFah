@@ -105,10 +105,9 @@ class OrderListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (menuList.isNotEmpty()) {
-            calculate()
-            recyclerOrder.adapter.notifyDataSetChanged()
-        }
+        calculate()
+
+        recyclerOrder.adapter.notifyDataSetChanged()
 
         btnCheckOut.setOnClickListener(onClickListener)
     }
@@ -118,13 +117,16 @@ class OrderListFragment : Fragment() {
         var vatCost = 0.00
         var serviceChargeCost = 0.00
         var totalCost = 0.00
-        menuList.forEach {
-            netCost += it.price
-        }
 
-        vatCost = (netCost * 7) / 100
-        serviceChargeCost = (netCost * 10) / 100
-        totalCost = netCost + vatCost + serviceChargeCost
+        if (menuList.isNotEmpty()) {
+            menuList.forEach {
+                netCost += it.price
+            }
+
+            vatCost = (netCost * 7) / 100
+            serviceChargeCost = (netCost * 10) / 100
+            totalCost = netCost + vatCost + serviceChargeCost
+        }
 
         txtNet.text = "%.2f".format(netCost)
         txtVat.text = "%.2f".format(vatCost)
