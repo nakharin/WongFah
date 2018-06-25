@@ -2,14 +2,14 @@ package com.nakharin.wongfah.presenter
 
 import com.nakharin.wongfah.network.model.JsonMenu
 
-class CostCalculator(private val menuList: ArrayList<JsonMenu>): OnCalculateListener {
+class CostCalculator(private val menuList: ArrayList<JsonMenu>) : OnCalculateListener {
 
     private var netCost = 0.00
     private var vatCost = 0.00
     private var serviceChargeCost = 0.00
     private var totalCost = 0.00
 
-     override fun onNetChanged(): Double {
+    override fun onNetChanged(): Double {
         menuList.forEach {
             netCost += it.price
         }
@@ -17,11 +17,13 @@ class CostCalculator(private val menuList: ArrayList<JsonMenu>): OnCalculateList
     }
 
     override fun onVatChanged(): Double {
-        return (netCost * 7) / 100
+        vatCost = (netCost * 7) / 100
+        return vatCost
     }
 
     override fun onServiceChargeChanged(): Double {
-        return (netCost * 10) / 100
+        serviceChargeCost = (netCost * 10) / 100
+        return serviceChargeCost
     }
 
     override fun onTotalChanged(): Double {
