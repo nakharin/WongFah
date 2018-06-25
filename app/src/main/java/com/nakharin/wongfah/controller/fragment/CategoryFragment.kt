@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
-import com.nakharin.wongfah.adapter.CategoryAdapter
+import com.nakharin.wongfah.adapter.CategoryListAdapter
 import com.nakharin.wongfah.addOnItemClickListener
 import com.nakharin.wongfah.event.EventSendPosition
 import com.nakharin.wongfah.manager.CategoryManager
@@ -35,7 +35,7 @@ class CategoryFragment : Fragment() {
 
     private lateinit var recyclerCategory: RecyclerView
 
-    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var categoryListAdapter: CategoryListAdapter
 
     private var categoryList: ArrayList<JsonCategory> = arrayListOf()
 
@@ -77,8 +77,8 @@ class CategoryFragment : Fragment() {
         val linearLayoutManager = LinearLayoutManager(rootView.context)
         recyclerCategory.layoutManager = linearLayoutManager
 
-        categoryAdapter = CategoryAdapter(categoryList)
-        recyclerCategory.adapter = categoryAdapter
+        categoryListAdapter = CategoryListAdapter()
+        recyclerCategory.adapter = categoryListAdapter
     }
 
     private fun setUpView() {
@@ -88,9 +88,8 @@ class CategoryFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (CategoryManager.getInstance().categoryList.isEmpty()) {
-            loadCategoryList()
-        }
+        // Method from this class
+        loadCategoryList()
 
         recyclerCategory.addOnItemClickListener(onItemClickListener)
     }
@@ -105,7 +104,6 @@ class CategoryFragment : Fragment() {
     }
 
     private fun loadCategoryList() {
-
         val categories = CategoryManager.getInstance().categoryList
         if (categories.isEmpty()) {
             dialog.show(fragmentManager, "dialog")
@@ -117,22 +115,25 @@ class CategoryFragment : Fragment() {
                         dialog.dismiss()
                         if (it.success) {
                             it.data?.let {
-                                categoryList.addAll(it)
                                 CategoryManager.getInstance().categoryList = it
+                                categoryList.addAll(it)
                             }
-                            recyclerCategory.adapter.notifyDataSetChanged()
+
+                            categoryListAdapter.submitList(categoryList)
+
                         } else {
                             longToast(it.message)
                         }
+
                     }, {
                         dialog.dismiss()
                         longToast(it.localizedMessage)
                     })
 
             compositeDisposable.add(service)
+
         } else {
-            categoryList.addAll(categories)
-            recyclerCategory.adapter.notifyDataSetChanged()
+            categoryListAdapter.submitList(categories)
         }
     }
 

@@ -81,6 +81,66 @@ class MainActivity : AppCompatActivity() {
         myToolbar.setOnToolbarClickListener(onToolbarClickListener)
     }
 
+    private fun moveToCategoryFragment() {
+        val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
+        val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
+        val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
+        val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
+
+        supportFragmentManager.beginTransaction()
+                .attach(categoryFragment)
+                .detach(menuFragment)
+                .detach(orderListFragment)
+                .detach(orderCompletedFragment)
+                .commit()
+    }
+
+    private fun moveToMenuFragment(position: Int) {
+        val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
+        val menuFragment = MenuFragment.newInstance(position)
+        val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
+        val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
+
+        supportFragmentManager.beginTransaction()
+                .add(R.id.contentContainer,
+                        menuFragment,
+                        "MenuFragment")
+                .detach(categoryFragment)
+                .detach(orderListFragment)
+                .detach(orderCompletedFragment)
+                .commit()
+    }
+
+    private fun moveToOrderListFragment() {
+        val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
+        val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
+        val orderListFragment = OrderListFragment.newInstance(Parcels.wrap(menuList))
+        val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
+
+        supportFragmentManager.beginTransaction()
+                .add(R.id.contentContainer,
+                        orderListFragment,
+                        "OrderListFragment")
+                .detach(categoryFragment)
+                .detach(menuFragment)
+                .detach(orderCompletedFragment)
+                .commit()
+    }
+
+    private fun moveToOrderCompletedFragment() {
+        val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
+        val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
+        val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
+        val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
+
+        supportFragmentManager.beginTransaction()
+                .detach(categoryFragment)
+                .detach(menuFragment)
+                .detach(orderListFragment)
+                .attach(orderCompletedFragment)
+                .commit()
+    }
+
     /********************************************************************************************
      ************************************ Listener **********************************************
      ********************************************************************************************/
@@ -91,18 +151,8 @@ class MainActivity : AppCompatActivity() {
             val fragment = supportFragmentManager.findFragmentById(R.id.contentContainer)
             if (fragment is MenuFragment || fragment is OrderListFragment || fragment is OrderCompletedFragment) {
                 myToolbar.isShowBackIcon(false)
-
-                val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
-                val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
-                val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
-                val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
-
-                supportFragmentManager.beginTransaction()
-                        .attach(categoryFragment)
-                        .detach(menuFragment)
-                        .detach(orderListFragment)
-                        .detach(orderCompletedFragment)
-                        .commit()
+                // Method from this class
+                moveToCategoryFragment()
             }
         }
 
@@ -111,20 +161,8 @@ class MainActivity : AppCompatActivity() {
                 val fragment = supportFragmentManager.findFragmentById(R.id.contentContainer)
                 if (fragment is CategoryFragment || fragment is MenuFragment) {
                     myToolbar.isShowBackIcon(true)
-
-                    val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
-                    val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
-                    val orderListFragment = OrderListFragment.newInstance(Parcels.wrap(menuList))
-                    val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
-
-                    supportFragmentManager.beginTransaction()
-                            .add(R.id.contentContainer,
-                                    orderListFragment,
-                                    "OrderListFragment")
-                            .detach(categoryFragment)
-                            .detach(menuFragment)
-                            .detach(orderCompletedFragment)
-                            .commit()
+                    // Method from this class
+                    moveToOrderListFragment()
                 }
             } else {
                 longToast(getString(R.string.str_please_select_foods))
@@ -139,20 +177,8 @@ class MainActivity : AppCompatActivity() {
     @Subscribe
     fun onRecivePosition(eventSendPosition: EventSendPosition) {
         myToolbar.isShowBackIcon(true)
-
-        val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
-        val menuFragment = MenuFragment.newInstance(eventSendPosition.position)
-        val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
-        val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
-
-        supportFragmentManager.beginTransaction()
-                .add(R.id.contentContainer,
-                        menuFragment,
-                        "MenuFragment")
-                .detach(categoryFragment)
-                .detach(orderListFragment)
-                .detach(orderCompletedFragment)
-                .commit()
+        // Method from this class
+        moveToMenuFragment(eventSendPosition.position)
     }
 
     @Subscribe
@@ -174,20 +200,8 @@ class MainActivity : AppCompatActivity() {
                 val fragment = supportFragmentManager.findFragmentById(R.id.contentContainer)
                 if (fragment is CategoryFragment || fragment is MenuFragment) {
                     myToolbar.isShowBackIcon(true)
-
-                    val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
-                    val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
-                    val orderListFragment = OrderListFragment.newInstance(Parcels.wrap(menuList))
-                    val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
-
-                    supportFragmentManager.beginTransaction()
-                            .add(R.id.contentContainer,
-                                    orderListFragment,
-                                    "OrderListFragment")
-                            .detach(categoryFragment)
-                            .detach(menuFragment)
-                            .detach(orderCompletedFragment)
-                            .commit()
+                    // Method from this class
+                    moveToOrderListFragment()
                 }
             } else {
                 longToast(getString(R.string.str_please_select_foods))
@@ -200,18 +214,8 @@ class MainActivity : AppCompatActivity() {
         if (eventSendCheckOut.isCheckOut) {
             menuList.clear()
             myToolbar.setItemCount(0)
-
-            val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
-            val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
-            val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
-            val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
-
-            supportFragmentManager.beginTransaction()
-                    .detach(categoryFragment)
-                    .detach(menuFragment)
-                    .detach(orderListFragment)
-                    .attach(orderCompletedFragment)
-                    .commit()
+            // Method from this class
+            moveToOrderCompletedFragment()
         }
     }
 
@@ -219,18 +223,8 @@ class MainActivity : AppCompatActivity() {
     fun onReciveClosed(eventSendClosed: EventSendClosed) {
         if (eventSendClosed.isClosed) {
             myToolbar.isShowBackIcon(false)
-
-            val categoryFragment = supportFragmentManager.findFragmentByTag("CategoryFragment")
-            val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
-            val orderListFragment = supportFragmentManager.findFragmentByTag("OrderListFragment")
-            val orderCompletedFragment = supportFragmentManager.findFragmentByTag("OrderCompletedFragment")
-
-            supportFragmentManager.beginTransaction()
-                    .attach(categoryFragment)
-                    .detach(menuFragment)
-                    .detach(orderListFragment)
-                    .detach(orderCompletedFragment)
-                    .commit()
+            // Method from this class
+            moveToCategoryFragment()
         }
     }
 }

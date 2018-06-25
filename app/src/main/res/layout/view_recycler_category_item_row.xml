@@ -12,7 +12,7 @@
     app:cardElevation="@dimen/card_elevation"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true"
-    tools:context=".adapter.CategoryAdapter">
+    tools:context=".adapter.viewholder.CategoryViewHolder">
 
     <ImageView
         android:id="@+id/imgCategory"
