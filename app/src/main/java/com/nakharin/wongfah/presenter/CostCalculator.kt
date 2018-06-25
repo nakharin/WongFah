@@ -2,7 +2,7 @@ package com.nakharin.wongfah.presenter
 
 import com.nakharin.wongfah.network.model.JsonMenu
 
-class CostCalculator(private val menuList: ArrayList<JsonMenu>):OnCalculateListener {
+class CostCalculator(private val menuList: ArrayList<JsonMenu>): OnCalculateListener {
 
     private var netCost = 0.00
     private var vatCost = 0.00
