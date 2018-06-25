@@ -13,15 +13,12 @@ import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.OrderAdapter
 import com.nakharin.wongfah.event.EventSendCheckOut
-import com.nakharin.wongfah.event.EventSendClosed
 import com.nakharin.wongfah.event.EventSendDeletePosition
 import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
+import com.nakharin.wongfah.presenter.CostCalculator
 import com.nakharin.wongfah.utility.Constants
 import com.pawegio.kandroid.longToast
-import com.pawegio.kandroid.runAsync
-import com.pawegio.kandroid.runOnUiThread
-import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_order_list.*
 import org.parceler.ParcelerRuntimeException
 import org.parceler.Parcels
@@ -105,6 +102,7 @@ class OrderListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // Method from this class
         calculate()
 
         recyclerOrder.adapter.notifyDataSetChanged()
@@ -113,31 +111,17 @@ class OrderListFragment : Fragment() {
     }
 
     private fun calculate() {
-        var netCost = 0.00
-        var vatCost = 0.00
-        var serviceChargeCost = 0.00
-        var totalCost = 0.00
-
-        if (menuList.isNotEmpty()) {
-            menuList.forEach {
-                netCost += it.price
-            }
-
-            vatCost = (netCost * 7) / 100
-            serviceChargeCost = (netCost * 10) / 100
-            totalCost = netCost + vatCost + serviceChargeCost
-        }
-
-        txtNet.text = "%.2f".format(netCost)
-        txtVat.text = "%.2f".format(vatCost)
-        txtServiceCharge.text = "%.2f".format(serviceChargeCost)
-        txtTotal.text = "%.2f".format(totalCost)
+        val cost = CostCalculator(menuList)
+        txtNet.text = "%.2f".format(cost.onNetChanged())
+        txtVat.text = "%.2f".format(cost.onVatChanged())
+        txtServiceCharge.text = "%.2f".format(cost.onServiceChargeChanged())
+        txtTotal.text = "%.2f".format(cost.onTotalChanged())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save Instance (Fragment level's variables) State here
-//        outState.putParcelable(Constants.SELECTED_MENU_LIST, Parcels.wrap(menuList))
+        outState.putParcelable(Constants.SELECTED_MENU_LIST, Parcels.wrap(menuList))
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -171,6 +155,7 @@ class OrderListFragment : Fragment() {
             eventSendDeletePosition.position = position
             BusProvider.getInstance().post(eventSendDeletePosition)
 
+            // Method from this class
             calculate()
 
             if (menuList.isEmpty()) {
