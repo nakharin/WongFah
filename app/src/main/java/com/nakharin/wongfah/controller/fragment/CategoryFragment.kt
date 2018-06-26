@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nakharin.mylibrary.view.DialogLoadingFragment
+import com.nakharin.wongfah.MyApplication
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.CategoryListAdapter
 import com.nakharin.wongfah.addOnItemClickListener
 import com.nakharin.wongfah.event.EventSendPosition
 import com.nakharin.wongfah.manager.CategoryManager
 import com.nakharin.wongfah.manager.bus.BusProvider
+import com.nakharin.wongfah.network.APIService
 import com.nakharin.wongfah.network.ConnectionService
 import com.nakharin.wongfah.network.model.JsonCategory
 import com.nakharin.wongfah.utility.RecyclerItemClickListener
@@ -21,6 +23,7 @@ import com.pawegio.kandroid.longToast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class CategoryFragment : Fragment() {
 
@@ -43,8 +46,14 @@ class CategoryFragment : Fragment() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
+    @Inject
+    private
+    lateinit var apiService: APIService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MyApplication.component.inject(this)
+
         init(savedInstanceState)
 
         if (savedInstanceState != null)
@@ -108,7 +117,7 @@ class CategoryFragment : Fragment() {
         if (categories.isEmpty()) {
             dialog.show(fragmentManager, "dialog")
 
-            val service = ConnectionService.getApiService().getCategoryList()
+            val service = apiService.getCategoryList()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({

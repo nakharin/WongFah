@@ -12,19 +12,25 @@ class MyApplication : Application() {
 
     companion object {
         lateinit var instance: com.nakharin.wongfah.MyApplication
+        lateinit var component: AppComponent
     }
 
     override fun onCreate() {
         super.onCreate()
 
         instance = this
-        Contextor.getInstance().init(this)
+
+        Contextor.getInstance().init(instance)
 
 //        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
 //                .setDefaultFontPath("fonts/PSL160pro.ttf")
 //                .setFontAttrId(R.attr.fontPath)
 //                .build()
 //        )
+
+        component = DaggerAppComponent.builder()
+                .appModule(AppModule(instance))
+                .build()
     }
 
     override fun onTrimMemory(level: Int) {
