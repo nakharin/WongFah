@@ -47,12 +47,11 @@ class CategoryFragment : Fragment() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     @Inject
-    private
     lateinit var apiService: APIService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyApplication.component.inject(this)
+        MyApplication.appComponent.inject(this)
 
         init(savedInstanceState)
 

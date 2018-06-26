@@ -9,10 +9,9 @@ import java.util.*
 
 class MyApplication : Application() {
 
-
     companion object {
         lateinit var instance: com.nakharin.wongfah.MyApplication
-        lateinit var component: AppComponent
+        lateinit var appComponent: AppComponent
     }
 
     override fun onCreate() {
@@ -28,7 +27,7 @@ class MyApplication : Application() {
 //                .build()
 //        )
 
-        component = DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(instance))
                 .build()
     }
