@@ -2,8 +2,8 @@ package com.nakharin.wongfah.network.model
 
 import android.os.Parcel
 import com.google.gson.annotations.SerializedName
-import com.nakharin.wongfah.utility.KParcelable
-import com.nakharin.wongfah.utility.parcelableCreator
+import com.nakharin.wongfah.extension.KParcelable
+import com.nakharin.wongfah.extension.parcelableCreator
 
 class JsonMenu() : KParcelable {
 

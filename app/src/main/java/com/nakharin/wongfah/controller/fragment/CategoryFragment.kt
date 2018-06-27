@@ -11,8 +11,8 @@ import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.MyApplication
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.CategoryListAdapter
-import com.nakharin.wongfah.addOnItemClickListener
 import com.nakharin.wongfah.event.EventSendPosition
+import com.nakharin.wongfah.extension.addOnItemClickListener
 import com.nakharin.wongfah.manager.CategoryManager
 import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.APIService

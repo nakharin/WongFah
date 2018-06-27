@@ -1,6 +1,7 @@
 package com.nakharin.wongfah.network
 
 import com.google.gson.GsonBuilder
+import com.nakharin.wongfah.utility.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -15,8 +16,6 @@ import java.util.concurrent.TimeUnit
 class ConnectionService {
 
     companion object {
-
-        private const val BASE_URL: String = "https://www.mellowlab.cloud/wongfah/"
 
         const val AUTHORIZATION: String = "Authorization"
         const val AUTHORIZATION_CODE: Int = 401
@@ -52,7 +51,7 @@ class ConnectionService {
 //            httpClient.authenticator(tokenAuthenticator)
 
             return Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient.build())

@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nakharin.wongfah.network.APIService
 import com.nakharin.wongfah.network.DateDeserializer
+import com.nakharin.wongfah.utility.Constants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -20,8 +21,6 @@ import javax.inject.Singleton
 
 @Module
 class AppModule(private val application: Application) {
-
-    private val BASE_URL: String = "https://www.mellowlab.cloud/wongfah/"
 
     @Singleton
     @Provides
@@ -64,7 +63,7 @@ class AppModule(private val application: Application) {
     @Singleton
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Constants.BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)

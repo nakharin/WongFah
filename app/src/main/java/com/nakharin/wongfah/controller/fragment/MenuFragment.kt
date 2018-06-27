@@ -8,19 +8,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.nakharin.mylibrary.view.DialogLoadingFragment
 import com.nakharin.wongfah.R
 import com.nakharin.wongfah.adapter.MenuAdapter
-import com.nakharin.wongfah.addOnItemClickListener
 import com.nakharin.wongfah.event.EventSendCompleted
 import com.nakharin.wongfah.event.EventSendSelectMenu
+import com.nakharin.wongfah.extension.addOnItemClickListener
 import com.nakharin.wongfah.manager.CategoryManager
 import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.model.JsonMenu
 import com.nakharin.wongfah.utility.Constants
 import com.nakharin.wongfah.utility.RecyclerItemClickListener
-import com.pawegio.kandroid.toast
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 class MenuFragment: Fragment() {

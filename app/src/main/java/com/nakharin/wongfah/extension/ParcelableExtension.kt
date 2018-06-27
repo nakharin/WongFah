@@ -1,4 +1,4 @@
-package com.nakharin.wongfah.utility
+package com.nakharin.wongfah.extension
 
 import android.os.Parcel
 import android.os.Parcelable
