@@ -16,8 +16,6 @@ import com.nakharin.wongfah.extension.addOnItemClickListener
 import com.nakharin.wongfah.manager.CategoryManager
 import com.nakharin.wongfah.manager.bus.BusProvider
 import com.nakharin.wongfah.network.APIService
-import com.nakharin.wongfah.network.ConnectionService
-import com.nakharin.wongfah.network.model.JsonCategory
 import com.nakharin.wongfah.utility.RecyclerItemClickListener
 import com.pawegio.kandroid.longToast
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,8 +37,6 @@ class CategoryFragment : Fragment() {
     private lateinit var recyclerCategory: RecyclerView
 
     private lateinit var categoryListAdapter: CategoryListAdapter
-
-    private var categoryList: ArrayList<JsonCategory> = arrayListOf()
 
     private lateinit var dialog: DialogLoadingFragment
 
@@ -124,11 +120,8 @@ class CategoryFragment : Fragment() {
                         if (it.success) {
                             it.data?.let {
                                 CategoryManager.getInstance().categoryList = it
-                                categoryList.addAll(it)
+                                categoryListAdapter.submitList(it)
                             }
-
-                            categoryListAdapter.submitList(categoryList)
-
                         } else {
                             longToast(it.message)
                         }

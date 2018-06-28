@@ -48,6 +48,16 @@ class AppModule(private val application: Application) {
         logging.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(logging)
 
+//        if (SharePrefUtility.isLogin) {
+//            val interceptor = Interceptor {
+//                val request = it.request().newBuilder()
+//                        .addHeader(AUTHORIZATION, "Bearer ${SharePrefUtility.accessToken}")
+//                        .build()
+//                return@Interceptor it.proceed(request)
+//            }
+//            httpClient.networkInterceptors().add(interceptor)
+//        }
+
         httpClient.connectTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
